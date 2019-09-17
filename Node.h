@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <vector>
+#include <thread>
 #include <math.h> 
 
 #ifndef NODE_H
@@ -19,13 +20,18 @@ public:
     Node(int newID, char newState, char newVoted){ID = newID; state = newState; voted = newVoted;}
 
     void Process(int taskTime);
+    void Request(Node *nodes, int n);
+    void GrantAccess(int requestersID);
 
     void getID(){std::cout << ID;}
-    void getState(){std::cout << state;}
-    void getVoted(){std::cout << voted;}
+
+    void setState(char newState){state = newState;}
+    char getState(){return state;}
+
+    char getVoted(){return voted;}
 
     void setVotingSet(int set){votingSet = set;}
-    void getVotingSet(){std::cout << votingSet;}
+    int getVotingSet(){return votingSet;}
 
 private:
     int ID;
@@ -37,14 +43,43 @@ private:
 };
 
 void Node::Process(int taskTime){
-    std::cout << "Node " << ID << " processing task in CS; bound to take " << taskTime << " millisecond.\n";
     time_t my_time = time(NULL);
-    printf("%s", ctime(&my_time)); 
+    printf("     %s", ctime(&my_time)); 
 
-    sleep(taskTime / 1000);
+    std::cout << "     Node " << ID << " processing task in CS; bound to take " << taskTime << " millisecond.\n";
+    sleep(taskTime / 1000);//Thread this section
 
     my_time = time(NULL);
-    printf("%s", ctime(&my_time)); 
+    printf("     %s", ctime(&my_time)); 
+}
+
+void Node::Request(Node *nodes, int n){
+    int k = floor(sqrt(n));
+    int m = k;
+  
+    int row = n / ID;
+    std::cout << "Rowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww " << row;
+    //Continue here and figure out a way to get this for loop to only grantAccess when it's in the same row
+    for(int i = 0; i < n; i++){
+        if(i/n == row && i != ID){
+            nodes[i].GrantAccess(ID);
+            std::cout << " $$ Requesting node " << i << ".\n";
+        }
+    }
+
+    int column;
+    column = ID % (m);
+
+    for(int i = 0; i < n; i++){
+        if(i%m == column && i != ID){
+            nodes[i].GrantAccess(ID);
+            std::cout << " && Requesting node " << i << ".\n";
+        }
+    }
+}
+
+void Node::GrantAccess(int RequestersID){
+
 }
 
 #endif

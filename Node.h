@@ -57,13 +57,15 @@ void Node::Request(Node *nodes, int n){
     int k = floor(sqrt(n));
     int m = k;
   
-    int row = n / ID;
-    std::cout << "Rowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww " << row;
-    //Continue here and figure out a way to get this for loop to only grantAccess when it's in the same row
-    for(int i = 0; i < n; i++){
-        if(i/n == row && i != ID){
-            nodes[i].GrantAccess(ID);
-            std::cout << " $$ Requesting node " << i << ".\n";
+    int matrixIndex = 0;
+
+    for(int i = 0; i < k; i++){
+        for(int j = 0; j < m; ++j){
+            if(i == votingSet && matrixIndex != ID){
+                nodes[matrixIndex].GrantAccess(ID);
+                std::cout << matrixIndex << " | ";
+            }
+            ++matrixIndex;
         }
     }
 
@@ -73,13 +75,27 @@ void Node::Request(Node *nodes, int n){
     for(int i = 0; i < n; i++){
         if(i%m == column && i != ID){
             nodes[i].GrantAccess(ID);
-            std::cout << " && Requesting node " << i << ".\n";
+            std::cout << i << " | ";
         }
     }
+    std::cout << "\n";
 }
 
 void Node::GrantAccess(int RequestersID){
+    // Push_back and pop_back are both commented out because I was getting this error: 
+    // terminate called after throwing an instance of 'std::bad_alloc'
+    // what():  std::bad_alloc 
+    // Aborted (core dumped)
 
+    //queue.push_back(RequestersID);
+
+    if(queue[0] != RequestersID){
+        sleep(100);
+        std::cout << "Node " << ID << " waiting on another node before responding to node " << RequestersID << ".\n";
+    }
+
+    //queue.pop_back();
+    
 }
 
 #endif

@@ -5,7 +5,7 @@
 #include "Node.h"
 
 int main(){
-    std::cout << "This program will execute homework 2 directly after homework 1 has been executed.\n";
+    std::cout << "This program will execute homework 2.1.\n";
     std::cout << "Please enter the number of node you'd like to execute in the Maekawa’s algorithm: ";
     
     int n = 0;//number of nodes
@@ -75,14 +75,14 @@ int main(){
         std::cin >> process;
         if(process < 0 || process > n){process = 0; std::cout << "     ***Process DNE, process 0 chosen instead***\n";}
 
-        std::cout << "How many milliseconds do you wan that process to be in the CS (enter 0 to stop homework 2.1): ";
+        std::cout << "How many milliseconds do you wan that process to be in the CS (enter 0 to stop): ";
         std::cin >> time;
 
         if(time != 0){
             std::cout << "\n";
             nodes[process]->setState('W');
-            std::cout << "Node " << process << " state set to Wanted. Requests to enter CS sent to Voting Set.\n";
-             nodes[process]->Request(*nodes, n);
+            std::cout << "Node " << process << " state set to Wanted. Requests to enter CS sent to Voting Set | ";
+            nodes[process]->Request(*nodes, n);
 
             nodes[process]->setState('H');
             std::cout << "\n     Process " << process << " entering CS, state changed to Held.\n";

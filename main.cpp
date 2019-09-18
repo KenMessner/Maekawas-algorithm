@@ -1,6 +1,6 @@
 //Homework 2.1 : Maekawas-algorithm
 //Author: Kenneth Messner
-//Last Modified: 9/17/2019
+//Last Modified: 9/18/2019
 
 #include "Node.h"
 

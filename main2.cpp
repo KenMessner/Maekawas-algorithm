@@ -6,10 +6,15 @@
 #include <string>
 #include <unistd.h>
 #include <math.h>
+#include <vector>
 
 void minMin();
 void maxMin();
 void sufferage();
+
+void process(int task, int machine, int time);
+int findMin(int task[7]);
+int findMachine(int task, int machine);
 
 //The below arrays list the computation times for machines [0-7] that type of task.
 //All 100's in the below arrays are actually computationally infeasible
@@ -40,7 +45,32 @@ void process(int task, int machine, int time){
 }
 
 void minMin(){
+    std::vector<int> taskMinTimes;
 
+    taskMinTimes.push_back(findMin(task0));
+    taskMinTimes.push_back(findMin(task1));
+    taskMinTimes.push_back(findMin(task2));
+    taskMinTimes.push_back(findMin(task3));
+    taskMinTimes.push_back(findMin(task4));
+    taskMinTimes.push_back(findMin(task5));
+    taskMinTimes.push_back(findMin(task6));
+    taskMinTimes.push_back(findMin(task7));
+
+    for(int i = 0; i < 8; ++i){
+        std::cout << taskMinTimes[i] << ", ";
+    }
+
+    while(!taskMinTimes.empty()){
+        int i, min=100, minTime=100;
+        for(i = 0; i < taskMinTimes.size(); ++i){
+            if(taskMinTimes[i] < min){
+                min = i;
+                minTime = taskMinTimes[i];
+                std::cout << "\n ### Min found: " << min << " with a time of: " << taskMinTimes[i] << ".\n";}
+        }
+        process(min,findMachine(min, taskMinTimes[min]),minTime);
+        taskMinTimes.erase(taskMinTimes.begin()+(i-1));
+    }//Continue here and figure out why this for loop never minds a new minimum.**************************************************************************************
 }
 
 void maxMin(){
@@ -49,4 +79,66 @@ void maxMin(){
 
 void sufferage(){
 
+}
+
+int findMin(int task[7]){
+    int min = task[0];
+
+    for(int i = 0; i < 7; ++i){
+        if(task[i] < min){min = task[i];}
+    }
+
+    return min;
+}
+
+int findMachine(int task, int time){
+    int machine;
+
+    switch (task)
+    {
+    case 0:
+        for(int i = 0; i < 7; ++i){
+            if(task0[i] == time){machine = i;}
+        }
+        break;
+    case 1:
+        for(int i = 0; i < 7; ++i){
+            if(task1[i] == time){machine = i;}
+        }
+        break;
+    case 2:
+        for(int i = 0; i < 7; ++i){
+            if(task2[i] == time){machine = i;}
+        }
+        break;
+    case 3:
+        for(int i = 0; i < 7; ++i){
+            if(task3[i] == time){machine = i;}
+        }
+        break;
+    case 4:
+        for(int i = 0; i < 7; ++i){
+            if(task4[i] == time){machine = i;}
+        }
+        break;
+    case 5:
+        for(int i = 0; i < 7; ++i){
+            if(task5[i] == time){machine = i;}
+        }
+        break;
+    case 6:
+        for(int i = 0; i < 7; ++i){
+            if(task6[i] == time){machine = i;}
+        }
+        break;
+    case 7:
+        for(int i = 0; i < 7; ++i){
+            if(task7[i] == time){machine = i;}
+        }
+        break;
+    
+    default:
+        break;
+    }
+    return machine;
 }

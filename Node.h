@@ -1,4 +1,4 @@
-//Homework 2 : Maekawas-algorithm and min-min / min-max / sufferage
+//Homework 2.1 : Maekawas-algorithm
 //Author: Kenneth Messner
 //Last Modified: 9/17/2019
 
@@ -22,6 +22,7 @@ public:
     void Process(int taskTime);
     void Request(Node *nodes, int n);
     void GrantAccess(int requestersID);
+    void ReleaseAccess();
 
     void getID(){std::cout << ID;}
 
@@ -44,13 +45,15 @@ private:
 
 void Node::Process(int taskTime){
     time_t my_time = time(NULL);
-    printf("     %s", ctime(&my_time)); 
+    printf("     -%s", ctime(&my_time)); 
 
-    std::cout << "     Node " << ID << " processing task in CS; bound to take " << taskTime << " millisecond.\n";
+    std::cout << "     Node " << ID << " recieved all responses, processing task in CS; bound to take " << taskTime << " millisecond.\n";
     sleep(taskTime / 1000);//Thread this section
 
     my_time = time(NULL);
-    printf("     %s", ctime(&my_time)); 
+    printf("     -%s", ctime(&my_time));
+
+    std::cout << "\nNode " << ID << " poped from queues of voting set nodes. Continuing on next queued request.";
 }
 
 void Node::Request(Node *nodes, int n){
@@ -64,6 +67,7 @@ void Node::Request(Node *nodes, int n){
             if(i == votingSet && matrixIndex != ID){
                 nodes[matrixIndex].GrantAccess(ID);
                 std::cout << matrixIndex << " | ";
+                nodes[matrixIndex].ReleaseAccess();
             }
             ++matrixIndex;
         }
@@ -76,6 +80,7 @@ void Node::Request(Node *nodes, int n){
         if(i%m == column && i != ID){
             nodes[i].GrantAccess(ID);
             std::cout << i << " | ";
+            nodes[matrixIndex].ReleaseAccess();
         }
     }
     std::cout << "\n";
@@ -89,13 +94,17 @@ void Node::GrantAccess(int RequestersID){
 
     //queue.push_back(RequestersID);
 
-    if(queue[0] != RequestersID){
-        sleep(100);
-        std::cout << "Node " << ID << " waiting on another node before responding to node " << RequestersID << ".\n";
-    }
+    // if(queue[0] != RequestersID){
+    //     sleep(100);
+    //     std::cout << "Node " << ID << " waiting on another node before responding to node " << RequestersID << ".\n";
+    // }
 
-    //queue.pop_back();
-    
+    voted = 'T';
+}
+
+void Node::ReleaseAccess(){
+    //queue.pop_back();//Commented out for the same reason that Granting Access is commented out.
+    voted = 'F';
 }
 
 #endif

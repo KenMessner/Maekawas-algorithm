@@ -1,4 +1,4 @@
-//Homework 2 : Maekawas-algorithm and min-min / min-max / sufferage
+//Homework 2.1 : Maekawas-algorithm
 //Author: Kenneth Messner
 //Last Modified: 9/17/2019
 

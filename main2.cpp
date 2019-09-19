@@ -41,7 +41,11 @@ int main(){
 }
 
 void process(int task, int machine, int time){
-    std::cout << "Task " << task << " executed on machine " << machine << " had a durration of " << time << " milliseconds.\n";
+    std::cout << "Task | " << task << " | executed on machine | " << machine << " | had a durration of | ";
+
+    if(time < 10){std::cout << " ";}
+    
+    std::cout << time << " | milliseconds.\n";
 }
 
 void minMin(){
@@ -56,21 +60,26 @@ void minMin(){
     taskMinTimes.push_back(findMin(task6));
     taskMinTimes.push_back(findMin(task7));
 
-    for(int i = 0; i < 8; ++i){
-        std::cout << taskMinTimes[i] << ", ";
-    }
+    // for(int i = 0; i < 8; ++i){
+    //     std::cout << taskMinTimes[i] << ", ";
+    // }
 
-    while(!taskMinTimes.empty()){
+    for(int j = 0; j < 8; ++j){
         int i, min=100, minTime=100;
         for(i = 0; i < taskMinTimes.size(); ++i){
-            if(taskMinTimes[i] < min){
+            //std::cout << " > Task " << i << " has a min time of " << taskMinTimes[i] << ".\n";
+            if(taskMinTimes[i] < minTime){
                 min = i;
                 minTime = taskMinTimes[i];
-                std::cout << "\n ### Min found: " << min << " with a time of: " << taskMinTimes[i] << ".\n";}
+                //std::cout << "### Min found: " << min << " with a time of: " << taskMinTimes[i] << ".\n";
+            }
         }
         process(min,findMachine(min, taskMinTimes[min]),minTime);
-        taskMinTimes.erase(taskMinTimes.begin()+(i-1));
-    }//Continue here and figure out why this for loop never minds a new minimum.**************************************************************************************
+        taskMinTimes[min]=100;
+        // for(int i = 0; i < 8; ++i){
+        //     std::cout << taskMinTimes[i] << ", ";
+        // }
+    }
 }
 
 void maxMin(){

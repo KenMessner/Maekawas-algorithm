@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <vector>
+#include <cmath>
 
 void minMin();
 void maxMin();
@@ -14,6 +15,7 @@ void sufferage();
 
 void process(int task, int machine, int time);
 int findMin(int task[7]);
+int findSecondMin(int task[7]);
 int findMachine(int task, int machine);
 
 //The below arrays list the computation times for machines [0-7] that type of task.
@@ -30,14 +32,17 @@ int task7[7]{80,17,38,40,66,25,88};
 int main(){
     std::cout << "Homework 2.2 | Ken Messner | min-min, max-min, sufferage.\n\n";
 
-    std::cout << "Executing Algorithm Min-Min:\n";
+    std::cout << "======================= Executing Algorithm Min-Min =======================\n";
     minMin();
+    std::cout << "===========================================================================\n\n";
 
-    std::cout << "\nExecuting Algorithm Max-Min:";
+    std::cout << "\n======================= Executing Algorithm Max-Min =======================\n";
     maxMin();
+    std::cout << "===========================================================================\n\n";
 
-    std::cout << "\nExecuting Algorithm Sufferage:";
+    std::cout << "\n====================== Executing Algorithm Sufferage ======================\n";
     sufferage();
+    std::cout << "===========================================================================\n\n";
 }
 
 void process(int task, int machine, int time){
@@ -83,11 +88,89 @@ void minMin(){
 }
 
 void maxMin(){
+    std::vector<int> taskMinTimes;
 
+    taskMinTimes.push_back(findMin(task0));
+    taskMinTimes.push_back(findMin(task1));
+    taskMinTimes.push_back(findMin(task2));
+    taskMinTimes.push_back(findMin(task3));
+    taskMinTimes.push_back(findMin(task4));
+    taskMinTimes.push_back(findMin(task5));
+    taskMinTimes.push_back(findMin(task6));
+    taskMinTimes.push_back(findMin(task7));
+
+    // for(int i = 0; i < 8; ++i){
+    //     std::cout << taskMinTimes[i] << ", ";
+    // }
+    // std::cout << ".\n\n";
+
+    for(int j = 0; j < 8; ++j){
+        int i, max=0, maxTime=0;
+        for(i = 0; i < taskMinTimes.size(); ++i){
+            //std::cout << " > Task " << i << " has a min time of " << taskMinTimes[i] << ".\n";
+            if(taskMinTimes[i] > maxTime){
+                max = i;
+                maxTime = taskMinTimes[i];
+                //std::cout << "### Min found: " << min << " with a time of: " << taskMinTimes[i] << ".\n";
+            }
+        }
+        process(max,findMachine(max, taskMinTimes[max]),maxTime);
+        taskMinTimes[max]=0;
+        // for(int i = 0; i < 8; ++i){
+        //     std::cout << taskMinTimes[i] << ", ";
+        // }
+    }
 }
 
 void sufferage(){
+    std::vector<int> taskMinTimes, taskSecondMinTimes;
 
+    taskMinTimes.push_back(findMin(task0));
+    taskMinTimes.push_back(findMin(task1));
+    taskMinTimes.push_back(findMin(task2));
+    taskMinTimes.push_back(findMin(task3));
+    taskMinTimes.push_back(findMin(task4));
+    taskMinTimes.push_back(findMin(task5));
+    taskMinTimes.push_back(findMin(task6));
+    taskMinTimes.push_back(findMin(task7));
+
+    taskSecondMinTimes.push_back(findSecondMin(task0));
+    taskSecondMinTimes.push_back(findSecondMin(task1));
+    taskSecondMinTimes.push_back(findSecondMin(task2));
+    taskSecondMinTimes.push_back(findSecondMin(task3));
+    taskSecondMinTimes.push_back(findSecondMin(task4));
+    taskSecondMinTimes.push_back(findSecondMin(task5));
+    taskSecondMinTimes.push_back(findSecondMin(task6));
+    taskSecondMinTimes.push_back(findSecondMin(task7));
+
+
+    // std::cout << "\n\n";
+
+    // for(int i = 0; i < 8; ++i){
+    //     std::cout << taskMinTimes[i] << ", ";
+    // }
+
+    // std::cout << "\n\n";
+
+    // for(int i = 0; i < 8; ++i){
+    //     std::cout << taskSecondMinTimes[i] << ", ";
+    // }
+    
+    // std::cout << "\n\n";
+    
+
+    for(int j = 0; j < 8; ++j){
+        int i, max=0, Time=0;
+        for(i = 0; i < taskMinTimes.size(); ++i){
+            if(taskSecondMinTimes[i]-taskMinTimes[i] > Time && taskSecondMinTimes[i] != 100 && taskMinTimes[i] != 100){
+                max = i;
+                Time = taskSecondMinTimes[i]-taskMinTimes[i];
+                //std::cout << "New max sufferage found on task " << max << " with a time difference of " << taskSecondMinTimes[i]-taskMinTimes[i] << ".\n";
+            }
+        }
+        process(max,findMachine(max, taskMinTimes[max]),taskMinTimes[max]);
+        taskMinTimes[max]=100;
+    }
 }
 
 int findMin(int task[7]){
@@ -150,4 +233,24 @@ int findMachine(int task, int time){
         break;
     }
     return machine;
+}
+
+int findSecondMin(int task[7]){
+    int min = 100;
+    int secondMin = 100;
+
+    for(int i = 0; i < 7; ++i){
+        if(task[i] < min){
+            min = task[i];
+            //std::cout << "New min found, " << min <<".\n";
+            if(i == 0){secondMin = min;}
+        }
+        if(task[i] < secondMin && task[i] != min){
+            secondMin = task[i];
+            //std::cout << "New second-min found, " << secondMin <<".\n";
+        }
+    }
+    //std::cout << "\n";
+
+    return secondMin;
 }
